@@ -60,7 +60,7 @@ Time can be provided as a _number of seconds_ or `<int>h<int>m<int>s` meaning nu
 You should always use virtual envs.
 
 ```shell
-pip install teamspeak_bot
+pip install teamspeak-bot
 ```
 
 ## Configuration

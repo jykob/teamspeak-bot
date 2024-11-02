@@ -1,6 +1,6 @@
 [project]
 name = "teamspeak_bot"
-version = "0.1.0"
+version = "0.1.1"
 authors = [{ name = "jykob" }]
 description = "Python TeamSpeak bot using TSBot framework"
 readme = "README.md"
