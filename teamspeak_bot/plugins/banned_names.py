@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Callable
 from contextlib import suppress
-from typing import TYPE_CHECKING, NotRequired, Required
+from typing import TYPE_CHECKING
 
 from tsbot import plugin, query
 from tsbot.exceptions import TSResponseError
@@ -18,20 +18,19 @@ if TYPE_CHECKING:
 
 REASON_KICK_SERVER = 5
 DEFAULT_MESSAGE = "Nickname banned"
+DEFAULT_CHECK_PERIOD = 30
 
 
-class BannedNamesConfig(BasePluginConfig):
-    banned_names: NotRequired[tuple[str, ...]]
-    is_banned_name: NotRequired[Callable[[str], bool]]
-    message: NotRequired[str]
-    check_period: Required[float]
+class BannedNamesConfig(BasePluginConfig, total=False):
+    banned_names: tuple[str, ...]
+    is_banned_name: Callable[[str], bool]
+    message: str
+    check_period: float
 
 
 DEFAULT_CONFIG = BannedNamesConfig(
     enabled=True,
     banned_names=("TeamSpeakUser",),
-    message=DEFAULT_MESSAGE,
-    check_period=30,
 )
 
 
@@ -42,7 +41,7 @@ class BannedNamesPlugin(plugin.TSPlugin):
         self.message = config.get("message", DEFAULT_MESSAGE)
         self.banned_names = config.get("banned_names")
         self.is_banned_name = config.get("is_banned_name")
-        self.check_period = config["check_period"]
+        self.check_period = config.get("check_period", DEFAULT_CHECK_PERIOD)
 
         self.check_task: TSTask | None = None
 

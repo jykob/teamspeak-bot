@@ -12,13 +12,15 @@ if TYPE_CHECKING:
     from tsbot import TSBot, TSCtx
 
 
-class GreeterConfig(BasePluginConfig):
+DEFAULT_MESSAGE = "Welcome to server, {client_nickname}"
+
+
+class GreeterConfig(BasePluginConfig, total=False):
     message: str
 
 
 DEFAULT_CONFIG = GreeterConfig(
     enabled=True,
-    message="Welcome to server, {client_nickname}",
 )
 
 
@@ -26,7 +28,7 @@ class GreeterPlugin(plugin.TSPlugin):
     POKE_QUERY = query("clientpoke")
 
     def __init__(self, config: GreeterConfig) -> None:
-        self.message = config.get("message")
+        self.message = config.get("message", DEFAULT_MESSAGE)
 
         self.guest_id: str = ""
 

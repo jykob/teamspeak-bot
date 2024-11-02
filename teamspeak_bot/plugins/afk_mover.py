@@ -14,15 +14,17 @@ if TYPE_CHECKING:
     from tsbot import TSBot, TSTask
 
 
-class AFKMoverConfig(BasePluginConfig):
+DEFAULT_AFK_CHANNEL = "AFK"
+DEFAULT_IDLE_TIME = 30 * 60
+
+
+class AFKMoverConfig(BasePluginConfig, total=False):
     afk_channel: str
     idle_time: float
 
 
 DEFAULT_CONFIG = AFKMoverConfig(
     enabled=True,
-    afk_channel="AFK",
-    idle_time=30 * 60,  # 30 minutes
 )
 
 
@@ -42,8 +44,8 @@ class AFKMover(plugin.TSPlugin):
     CHECK_INTERVAL = 60  # Check every minute
 
     def __init__(self, config: AFKMoverConfig) -> None:
-        self.afk_channel = config.get("afk_channel")
-        self.idle_time = config.get("idle_time") * 1000
+        self.afk_channel = config.get("afk_channel", DEFAULT_AFK_CHANNEL)
+        self.idle_time = config.get("idle_time", DEFAULT_IDLE_TIME) * 1000
 
         self.afk_channel_id: str = ""
         self.task: TSTask | None = None

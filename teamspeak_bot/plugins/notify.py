@@ -15,19 +15,21 @@ if TYPE_CHECKING:
     from tsbot import TSBot
 
 
+DEFAULT_MAX_DELAY = 60 * 60
+
+
 class NotifyConfig(BasePluginConfig, total=False):
     max_delay: int
 
 
 DEFAULT_CONFIG = NotifyConfig(
     enabled=True,
-    max_delay=60 * 60,
 )
 
 
 class NotifyPlugin(plugin.TSPlugin):
     def __init__(self, config: NotifyConfig) -> None:
-        self.max_delay = config.get("max_delay")
+        self.max_delay = config.get("max_delay", DEFAULT_MAX_DELAY)
 
     @plugin.command(
         "notify",

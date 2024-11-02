@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Final
+from typing import TYPE_CHECKING
 
 import tsformatter as tsf
 from tsbot import plugin
@@ -10,6 +10,18 @@ from teamspeak_bot.plugins import BasePluginConfig
 
 if TYPE_CHECKING:
     from tsbot import TSBot, TSCtx
+
+
+def create_error_prefix(error_name: str):
+    return tsf.bold(str.join("", ("[", tsf.color("#f9655d", error_name), "]")))
+
+
+DEFAULT_MESSAGES = {
+    "invalid_invocation_message": f"{create_error_prefix('Argument error')}: {'{exception}'}\nUse '!help {'{command}'}' to see usage.",
+    "permission_error_message": f"{create_error_prefix('Permission error')}: {'{exception}'}",
+    "permission_error_log_message": "{invokername!r} ({invokeruid}) tried to use command {command!r} with args {raw_args!r}",
+    "command_error_message": f"{create_error_prefix('Command error')}: {'{exception}'}",
+}
 
 
 class ErrorEventsConfig(BasePluginConfig, total=False):
@@ -22,18 +34,6 @@ class ErrorEventsConfig(BasePluginConfig, total=False):
 DEFAULT_CONFIG = ErrorEventsConfig(
     enabled=True,
 )
-
-
-def create_error_prefix(error_name: str):
-    return tsf.bold(str.join("", ("[", tsf.color("#f9655d", error_name), "]")))
-
-
-DEFAULT_MESSAGES: Final = {
-    "invalid_invocation_message": f"{create_error_prefix('Argument error')}: {'{exception}'}\nUse '!help {'{command}'}' to see usage.",
-    "permission_error_message": f"{create_error_prefix('Permission error')}: {'{exception}'}",
-    "permission_error_log_message": "{invokername!r} ({invokeruid}) tried to use command {command!r} with args {raw_args!r}",
-    "command_error_message": f"{create_error_prefix('Command error')}: {'{exception}'}",
-}
 
 
 class ErrorEventsPlugin(plugin.TSPlugin):
