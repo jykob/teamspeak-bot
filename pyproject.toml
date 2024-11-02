@@ -1,0 +1,49 @@
+[project]
+name = "teamspeak_bot"
+version = "0.1.0"
+authors = [{ name = "jykob" }]
+description = "Python TeamSpeak bot using TSBot framework"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Framework :: AsyncIO",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "tsbot == 1.4.1",
+    "tsformatter == 0.2.1",
+    "result == 0.17.0",
+    "httpx == 0.27.2 ",
+]
+license = { file = "LICENSE" }
+urls = { repository = "https://github.com/jykob/teamspeak-bot" }
+
+
+[project.scripts]
+teamspeak-bot = "teamspeak_bot.bot:main"
+
+
+[project.optional-dependencies]
+dev = ["ruff >= 0.4.4", "pyright >= 1.1.362", "python-dotenv == 1.0.1"]
+
+
+[build-system]
+requires = ["setuptools >= 75.3.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools]
+packages = { find = { include = ["teamspeak_bot*"] } }
+
+
+[tool.pyright]
+typeCheckingMode = "strict"
+
+
+[tool.ruff]
+line-length = 100
+lint = { select = ["E", "F", "I", "UP", "SIM"], ignore = ["E501"] }
