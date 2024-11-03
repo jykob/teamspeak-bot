@@ -14,8 +14,8 @@ if TYPE_CHECKING:
 
 
 class AdminConfig(BasePluginConfig, total=False):
-    allowed_uids: tuple[str]
-    allowed_server_groups: tuple[str]
+    allowed_uids: tuple[str, ...]
+    allowed_server_groups: tuple[str, ...]
     strict_server_group_checking: bool
 
 

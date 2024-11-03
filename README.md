@@ -112,8 +112,8 @@ Plugin config key: `admin`
 | Key | Type | Explanation |
 |---|---|---|
 | enabled | `bool` | If the plugin is enabled |
-| allowed_uids | `tuple[str]` | UIDs allowed to run admin commands. |
-| allowed_server_groups | `tuple[str]` | Server groups allowed to run admin commands. |
+| allowed_uids | `tuple[str, ...]` | UIDs allowed to run admin commands. |
+| allowed_server_groups | `tuple[str, ...]` | Server groups allowed to run admin commands. |
 | strict_server_group_checking | `bool` | By default if `Admin` in allowed_server_groups, any server group with the word `Admin` is allowed to run admin commands. This flag turns on strict matching. |
 
 ### Afk Mover
