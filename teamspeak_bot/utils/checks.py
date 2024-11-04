@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import operator
-from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 from teamspeak_bot.utils import get
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from tsbot import TSBot, TSCtx
 
 

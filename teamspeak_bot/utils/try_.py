@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Coroutine
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Coroutine
 
 
 def or_none[T, *Ts](func: Callable[[*Ts], T], *args: *Ts) -> T | None:

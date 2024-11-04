@@ -28,15 +28,15 @@ DEFAULT_CONFIG = AFKMoverConfig(
 )
 
 
-def is_active(client: dict[str, str], max_idle_time: float):
+def is_active(client: dict[str, str], max_idle_time: float) -> bool:
     return int(client.get("client_idle_time", 0)) < max_idle_time
 
 
-def in_afk_channel(client: dict[str, str], afk_channel_id: str):
+def in_afk_channel(client: dict[str, str], afk_channel_id: str) -> bool:
     return client.get("cid", "") == afk_channel_id
 
 
-def is_query(client: dict[str, str]):
+def is_query(client: dict[str, str]) -> bool:
     return client["client_type"] == "1"
 
 
@@ -50,7 +50,7 @@ class AFKMover(plugin.TSPlugin):
         self.afk_channel_id: str = ""
         self.task: TSTask | None = None
 
-    def should_be_moved(self, client: dict[str, str]):
+    def should_be_moved(self, client: dict[str, str]) -> bool:
         if is_query(client):
             return False
 
@@ -62,7 +62,7 @@ class AFKMover(plugin.TSPlugin):
 
         return True
 
-    async def afk_mover_task(self, bot: TSBot):
+    async def afk_mover_task(self, bot: TSBot) -> None:
         client_list = await cache.with_cache(
             bot.send, CLIENT_LIST_QUERY, max_ttl=self.CHECK_INTERVAL
         )
@@ -81,7 +81,7 @@ class AFKMover(plugin.TSPlugin):
             await bot.send(move_query)
 
     @plugin.once("connect")
-    async def get_afk_channel(self, bot: TSBot, ctx: None):
+    async def get_afk_channel(self, bot: TSBot, ctx: None) -> None:
         channel_list = await bot.send(query("channellist"))
 
         channel_id = find.from_iterable(channel_list, self.afk_channel, "channel_name", "cid")
@@ -91,12 +91,12 @@ class AFKMover(plugin.TSPlugin):
         self.afk_channel_id = channel_id
 
     @plugin.on("connect")
-    async def start_afk_mover(self, bot: TSBot, ctx: None):
+    async def start_afk_mover(self, bot: TSBot, ctx: None) -> None:
         self.task = bot.register_every_task(
             self.CHECK_INTERVAL, self.afk_mover_task, name="AFKMover-Task"
         )
 
     @plugin.on("disconnect")
-    async def stop_afk_mover(self, bot: TSBot, ctx: None):
+    async def stop_afk_mover(self, bot: TSBot, ctx: None) -> None:
         if self.task is not None:
             self.task = bot.remove_task(self.task)

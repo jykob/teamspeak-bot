@@ -33,7 +33,7 @@ class GreeterPlugin(plugin.TSPlugin):
         self.guest_id: str = ""
 
     @plugin.once("connect")
-    async def get_guest_id(self, bot: TSBot, ctx: None):
+    async def get_guest_id(self, bot: TSBot, ctx: None) -> None:
         server_groups = await bot.send(query("servergrouplist"))
 
         guest_id = None
@@ -47,7 +47,7 @@ class GreeterPlugin(plugin.TSPlugin):
         self.guest_id = guest_id
 
     @plugin.on("cliententerview")
-    async def handle_client_enter(self, bot: TSBot, ctx: TSCtx):
+    async def handle_client_enter(self, bot: TSBot, ctx: TSCtx) -> None:
         # Only greet users who have no server groups
         if ctx["client_servergroups"] != self.guest_id:
             return

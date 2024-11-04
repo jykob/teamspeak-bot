@@ -35,7 +35,7 @@ class NotifyPlugin(plugin.TSPlugin):
         "notify",
         help_text="Pokes you after given amount of time in seconds or in XXh XXm XXs format",
     )
-    async def notify_after(self, bot: TSBot, ctx: TSCtx, time: str, *message: str):
+    async def notify_after(self, bot: TSBot, ctx: TSCtx, time: str, *message: str) -> None:
         delay = try_.or_none(parsers.parse_time, time)
 
         if delay is None:
@@ -53,7 +53,7 @@ class NotifyPlugin(plugin.TSPlugin):
             )
         )
 
-    async def notify_task(self, bot: TSBot, client_id: str, message: str, delay: int):
+    async def notify_task(self, bot: TSBot, client_id: str, message: str, delay: int) -> None:
         await asyncio.sleep(delay)
         with suppress(TSResponseError):
             await bot.send(query("clientpoke").params(clid=client_id, msg=message))

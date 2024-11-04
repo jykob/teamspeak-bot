@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable
 from contextlib import suppress
 from typing import TYPE_CHECKING
 
@@ -13,6 +12,8 @@ from teamspeak_bot.plugins import BasePluginConfig
 from teamspeak_bot.utils import cache
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from tsbot import TSBot, TSCtx, TSTask
 
 
@@ -52,12 +53,12 @@ class BannedNamesPlugin(plugin.TSPlugin):
         bot.register_event_handler("connect", self.start_check_task)
         bot.register_event_handler("disconnect", self.cancel_check_task)
 
-    async def start_check_task(self, bot: TSBot, ctx: None):
+    async def start_check_task(self, bot: TSBot, ctx: None) -> None:
         self.check_task = bot.register_every_task(
             self.check_period, self.check_for_banned_names_periodically
         )
 
-    async def cancel_check_task(self, bot: TSBot, ctx: None):
+    async def cancel_check_task(self, bot: TSBot, ctx: None) -> None:
         if self.check_task:
             self.check_task = bot.remove_task(self.check_task)
 
@@ -69,11 +70,11 @@ class BannedNamesPlugin(plugin.TSPlugin):
             and self.is_banned_name(nickname)
         )
 
-    async def check_for_banned_names_on_enter(self, bot: TSBot, ctx: TSCtx):
+    async def check_for_banned_names_on_enter(self, bot: TSBot, ctx: TSCtx) -> None:
         if self.check_client_nickname(ctx["client_nickname"]):
             await self.kick_client(bot, ctx["clid"])
 
-    async def check_for_banned_names_periodically(self, bot: TSBot):
+    async def check_for_banned_names_periodically(self, bot: TSBot) -> None:
         client_list = await cache.with_cache(bot.send, CLIENT_LIST_QUERY, max_ttl=0)
 
         kick_coros = tuple(
@@ -87,6 +88,6 @@ class BannedNamesPlugin(plugin.TSPlugin):
 
         await asyncio.gather(*kick_coros)
 
-    async def kick_client(self, bot: TSBot, clid: str):
+    async def kick_client(self, bot: TSBot, clid: str) -> None:
         with suppress(TSResponseError):
             await bot.send(self.KICK_QUERY.params(clid=clid, reasonmsg=self.message))

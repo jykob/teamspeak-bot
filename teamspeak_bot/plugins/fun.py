@@ -23,11 +23,11 @@ DEFAULT_CONFIG = FunConfig(
 
 class FunPlugin(plugin.TSPlugin):
     @plugin.command("coinflip", help_text="Heads or tails")
-    async def coin_flip(self, bot: TSBot, ctx: TSCtx):
+    async def coin_flip(self, bot: TSBot, ctx: TSCtx) -> None:
         await bot.respond(ctx, random.choice(("Heads!", "Tails!")))
 
     @plugin.command("roll", help_text="Roll a die")
-    async def roll_a_die(self, bot: TSBot, ctx: TSCtx, sides: str = "6"):
+    async def roll_a_die(self, bot: TSBot, ctx: TSCtx, sides: str = "6") -> None:
         dice = try_.or_none(int, sides)
 
         if dice is None or dice <= 0:

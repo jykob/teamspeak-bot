@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import time
-from collections.abc import Callable, Coroutine
-from typing import Any, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Coroutine
 
 type CacheKey = tuple[Any, ...]
 type Cache = dict[CacheKey, CacheRecord]
@@ -32,7 +34,7 @@ class _Cache:
     def add(self, key: CacheKey, data: Any) -> None:
         self._cache[key] = CacheRecord(time.monotonic(), data)
 
-    def purge(self):
+    def purge(self) -> None:
         now = time.monotonic()
 
         to_be_deleted = tuple(

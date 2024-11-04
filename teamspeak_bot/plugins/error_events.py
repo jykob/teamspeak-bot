@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 from typing import TYPE_CHECKING
 
 import tsformatter as tsf
@@ -9,10 +8,12 @@ from tsbot import plugin
 from teamspeak_bot.plugins import BasePluginConfig
 
 if TYPE_CHECKING:
+    import logging
+
     from tsbot import TSBot, TSCtx
 
 
-def create_error_prefix(error_name: str):
+def create_error_prefix(error_name: str) -> str:
     return tsf.bold(str.join("", ("[", tsf.color("#f9655d", error_name), "]")))
 
 
@@ -58,14 +59,14 @@ class ErrorEventsPlugin(plugin.TSPlugin):
         )
 
     @plugin.on("parameter_error")
-    async def handle_parameter_error(self, bot: TSBot, ctx: TSCtx):
+    async def handle_parameter_error(self, bot: TSBot, ctx: TSCtx) -> None:
         await bot.respond(ctx, self.invalid_invocation_message.format(**ctx))
 
     @plugin.on("command_error")
-    async def handle_command_error(self, bot: TSBot, ctx: TSCtx):
+    async def handle_command_error(self, bot: TSBot, ctx: TSCtx) -> None:
         await bot.respond(ctx, self.command_error_message.format(**ctx))
 
     @plugin.on("permission_error")
-    async def handle_permission_error(self, bot: TSBot, ctx: TSCtx):
+    async def handle_permission_error(self, bot: TSBot, ctx: TSCtx) -> None:
         self.logger.warning(self.permission_error_log_message.format(**ctx))
         await bot.respond(ctx, self.permission_error_message.format(**ctx))

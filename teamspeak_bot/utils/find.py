@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import operator
-from collections.abc import Iterable, Mapping
-from typing import overload
+from typing import TYPE_CHECKING, overload
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Mapping
 
 
 @overload

@@ -5,6 +5,7 @@ import asyncio
 import logging
 import signal
 from contextlib import suppress
+from typing import NoReturn
 
 from tsbot import TSBot, TSCtx
 
@@ -24,7 +25,7 @@ from teamspeak_bot.plugins import (
 logger = logging.getLogger(__package__)
 
 
-async def open_console(bot: TSBot, ctx: TSCtx):
+async def open_console(bot: TSBot, ctx: TSCtx) -> None:
     """
     Responds to the client with a dm.
 
@@ -34,14 +35,14 @@ async def open_console(bot: TSBot, ctx: TSCtx):
     await bot.respond_to_client(ctx, "Console opened")
 
 
-async def async_main(bot: TSBot):
+async def async_main(bot: TSBot) -> None:
     with suppress(NotImplementedError):
         asyncio.get_running_loop().add_signal_handler(signal.SIGINT, bot.close)
 
     await bot.run()
 
 
-def main():
+def main() -> NoReturn:
     parser = argparse.ArgumentParser(prog="TeamSpeak Bot", description="TeamSpeak Server Query Bot")
 
     parser.add_argument("-c", "--config", default="config.py", help="Path to a config file")
@@ -88,28 +89,32 @@ def main():
     )
 
     if plugins_config := config.get("plugins"):
-        if (admin_config := plugins_config.get("admin")) and admin_config["enabled"]:
+        if (admin_config := plugins_config.get("admin")) and admin_config.get("enabled"):
             bot.load_plugin(admin.AdminPlugin(bot, admin_config))
 
-        if (afk_config := plugins_config.get("afk_mover")) and afk_config["enabled"]:
+        if (afk_config := plugins_config.get("afk_mover")) and afk_config.get("enabled"):
             bot.load_plugin(afk_mover.AFKMover(afk_config))
 
-        if (banned_names_cfg := plugins_config.get("banned_names")) and banned_names_cfg["enabled"]:
+        if (banned_names_cfg := plugins_config.get("banned_names")) and banned_names_cfg.get(
+            "enabled"
+        ):
             bot.load_plugin(banned_names.BannedNamesPlugin(bot, banned_names_cfg))
 
-        if (error_events_cfg := plugins_config.get("error_events")) and error_events_cfg["enabled"]:
+        if (error_events_cfg := plugins_config.get("error_events")) and error_events_cfg.get(
+            "enabled"
+        ):
             bot.load_plugin(error_events.ErrorEventsPlugin(logger, error_events_cfg))
 
-        if (fun_config := plugins_config.get("fun")) and fun_config["enabled"]:
+        if (fun_config := plugins_config.get("fun")) and fun_config.get("enabled"):
             bot.load_plugin(fun.FunPlugin())
 
-        if (greeter_config := plugins_config.get("greeter")) and greeter_config["enabled"]:
+        if (greeter_config := plugins_config.get("greeter")) and greeter_config.get("enabled"):
             bot.load_plugin(greeter.GreeterPlugin(greeter_config))
 
-        if (jokes_config := plugins_config.get("jokes")) and jokes_config["enabled"]:
+        if (jokes_config := plugins_config.get("jokes")) and jokes_config.get("enabled"):
             bot.load_plugin(jokes.JokesPlugin())
 
-        if (notify_config := plugins_config.get("notify")) and notify_config["enabled"]:
+        if (notify_config := plugins_config.get("notify")) and notify_config.get("enabled"):
             bot.load_plugin(notify.NotifyPlugin(notify_config))
 
     raise SystemExit(asyncio.run(async_main(bot)))

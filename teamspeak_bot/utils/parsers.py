@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 TIME_MAP = (
     ("h", 3600),
     ("m", 60),
