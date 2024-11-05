@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import operator
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Concatenate
+
+from tsbot.exceptions import TSPermissionError
 
 from teamspeak_bot.utils import get
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Coroutine, Sequence
 
     from tsbot import TSBot, TSCtx
 
@@ -26,3 +28,21 @@ async def check_groups(
 
 def check_uids(uids: Sequence[str], ctx: TSCtx) -> bool:
     return ctx.get("invokeruid") in uids
+
+
+def check_uids_and_server_groups[**P](
+    uids: tuple[str, ...] | None,
+    server_groups: tuple[str, ...] | None,
+    *,
+    strict: bool = False,
+) -> Callable[Concatenate[TSBot, TSCtx, P], Coroutine[None, None, None]]:
+    async def is_allowed_to_run(bot: TSBot, ctx: TSCtx, *args: P.args, **kwargs: P.kwargs) -> None:
+        if uids and check_uids(uids, ctx):
+            return
+
+        if server_groups and await check_groups(bot, ctx, server_groups, strict=strict):
+            return
+
+        raise TSPermissionError("Client not permitted to run this command")
+
+    return is_allowed_to_run

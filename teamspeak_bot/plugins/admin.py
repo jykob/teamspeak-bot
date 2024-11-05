@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from tsbot import plugin, query
-from tsbot.exceptions import TSPermissionError
 from tsbot.response import TSResponse
 
 from teamspeak_bot.plugins import BasePluginConfig
@@ -26,29 +25,20 @@ DEFAULT_CONFIG = AdminConfig(
 
 class AdminPlugin(plugin.TSPlugin):
     def __init__(self, bot: TSBot, config: AdminConfig) -> None:
-        self.uids = config.get("allowed_uids")
-        self.server_groups = config.get("allowed_server_groups")
-        self.strict = config.get("strict_server_group_checking", False)
+        admin_check = [
+            checks.check_uids_and_server_groups(
+                uids=config.get("allowed_uids"),
+                server_groups=config.get("allowed_server_groups"),
+                strict=config.get("strict_server_group_checking", False),
+            )
+        ]
 
-        owner_check = [self.is_allowed_to_run]
-
-        bot.register_command("eval", self.eval_, hidden=True, raw=True, checks=owner_check)
-        bot.register_command("exec", self.exec_, hidden=True, raw=True, checks=owner_check)
-        bot.register_command("quit", self.quit_, hidden=True, checks=owner_check)
-        bot.register_command("send", self.send, hidden=True, raw=True, checks=owner_check)
-        bot.register_command("spam", self.spam, hidden=True, checks=owner_check)
-        bot.register_command("nickname", self.change_nickname, hidden=True, checks=owner_check)
-
-    async def is_allowed_to_run(self, bot: TSBot, ctx: TSCtx, *args: str, **kwargs: str) -> None:
-        if self.uids and checks.check_uids(self.uids, ctx):
-            return
-
-        if self.server_groups and await checks.check_groups(
-            bot, ctx, self.server_groups, strict=self.strict
-        ):
-            return
-
-        raise TSPermissionError("Client not permitted to run this command")
+        bot.register_command("eval", self.eval_, hidden=True, raw=True, checks=admin_check)
+        bot.register_command("exec", self.exec_, hidden=True, raw=True, checks=admin_check)
+        bot.register_command("quit", self.quit_, hidden=True, checks=admin_check)
+        bot.register_command("send", self.send, hidden=True, raw=True, checks=admin_check)
+        bot.register_command("spam", self.spam, hidden=True, checks=admin_check)
+        bot.register_command("nickname", self.change_nickname, hidden=True, checks=admin_check)
 
     async def eval_(self, bot: TSBot, ctx: TSCtx, eval_str: str) -> None:
         response = try_.or_call(
