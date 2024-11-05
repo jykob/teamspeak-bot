@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from tsbot import plugin, query
 from tsbot.exceptions import TSResponseError
 
-from teamspeak_bot.common import CLIENT_LIST_QUERY
+from teamspeak_bot.common import CHANNEL_LIST_QUERY, CLIENT_LIST_QUERY
 from teamspeak_bot.plugins import BasePluginConfig
 from teamspeak_bot.utils import cache, find
 
@@ -82,7 +82,7 @@ class AFKMover(plugin.TSPlugin):
 
     @plugin.once("connect")
     async def get_afk_channel(self, bot: TSBot, ctx: None) -> None:
-        channel_list = await bot.send(query("channellist"))
+        channel_list = await cache.with_cache(bot.send, CHANNEL_LIST_QUERY, max_ttl=60)
 
         channel_id = find.from_iterable(channel_list, self.afk_channel, "channel_name", "cid")
         if not channel_id:
