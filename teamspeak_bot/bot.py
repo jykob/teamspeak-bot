@@ -18,6 +18,7 @@ from teamspeak_bot.plugins import (
     error_events,
     fun,
     greeter,
+    jail,
     jokes,
     notify,
 )
@@ -103,6 +104,9 @@ def main() -> NoReturn:
 
         if (fun_config := plugins_config.get("fun")) and fun_config.get("enabled"):
             bot.load_plugin(fun.FunPlugin())
+
+        if (jail_config := plugins_config.get("jail")) and jail_config.get("enabled"):
+            bot.load_plugin(jail.JailPlugin(bot, jail_config))
 
         if (greeter_config := plugins_config.get("greeter")) and greeter_config.get("enabled"):
             bot.load_plugin(greeter.GreeterPlugin(greeter_config))

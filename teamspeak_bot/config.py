@@ -14,6 +14,7 @@ from teamspeak_bot.plugins import (
     error_events,
     fun,
     greeter,
+    jail,
     jokes,
     notify,
 )
@@ -32,6 +33,7 @@ class PluginsConfig(TypedDict, total=False):
     error_events: error_events.ErrorEventsConfig
     fun: fun.FunConfig
     greeter: greeter.GreeterConfig
+    jail: jail.JailConfig
     jokes: jokes.JokesPluginConfig
     notify: notify.NotifyConfig
 
@@ -65,6 +67,7 @@ DEFAULT_PLUGINS_CONFIG: Final[PluginsConfig] = {
     "error_events": error_events.DEFAULT_CONFIG,
     "fun": fun.DEFAULT_CONFIG,
     "greeter": greeter.DEFAULT_CONFIG,
+    "jail": jail.DEFAULT_CONFIG,
     "jokes": jokes.DEFAULT_CONFIG,
     "notify": notify.DEFAULT_CONFIG,
 }
