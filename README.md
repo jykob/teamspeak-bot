@@ -2,9 +2,9 @@
 
 TeamSpeak server query bot. This bot is mainly an example project using the [TSBot](https://github.com/jykob/TSBot) framework.
 
-## Features
+## ✅ Features
 
-### Admin
+### 🔧 Admin
 
 Collection of helpful debugging commands:
 
@@ -17,7 +17,7 @@ Collection of helpful debugging commands:
 
 You probably don't want anyone running these commands, so they are locked behind checks. You can configure the bot to check for specific _uids_ or server groups that have the permission to run these commands.
 
-### AFK Mover
+### 🚶 AFK Mover
 
 Checks periodically for clients that haven't been active for given amount of time.  
 If such clients are found, move them to specified _AFK_ channel.
@@ -26,39 +26,39 @@ If the bot doesn't find _AFK_ channel, it will try to create one.
 You can white/blacklist channels where clients can be moved from.
 If you have _Jail_ plugin enabled, You might want to add your jail channel to the blacklist.
 
-### Banned names
+### ⛔ Banned names
 
 Kicks out any clients with configured nickname.  
 You can configure a list of banned nicknames or provide a function that return a boolean telling the bot if a given nickname is allowed.
 
 By default, the bot will only kick the default TeamSpeak nickname: `TeamSpeakUser`
 
-### Fun
+### 🎱 Fun
 
 Comes with handful of fun commands:
 
 - `coinflip`: Flips a coin, responding with heads or tails.
 - `roll <size=6>`: Rolls a given sided die.
 
-### Greeter
+### 👋 Greeter
 
 Greets new clients (_clients with `guest` server group_) with a configurable message.
 
-### Jail
+### 🛂 Jail
 
-Jails a client for a given amount of time.
+Jails a client for a given amount of time.  
 Time can be provided as a _number of seconds_ or `<int>h<int>m<int>s` meaning number of hours, minutes, and seconds respectively with out the `<>` (_no need to provide all of them_)
 
 - `jail <nickname> <time>`: Jail misbehaving client.
 - `free <nickname>`: Free jailed client. Don't use in pity.
 
-### Jokes
+### 😅 Jokes
 
 Command to tell some good/bad jokes about programming:
 
 - `joke` Tells a programming related joke
 
-### Notify
+### ⏰ Notify
 
 Pokes client with a message after given amount of time.  
 Time parsing works the same as in jail command.
@@ -69,7 +69,7 @@ Time parsing works the same as in jail command.
 
 - Python 3.12
 
-## Installation
+## 📦 Installation
 
 You should always use virtual envs.
 
