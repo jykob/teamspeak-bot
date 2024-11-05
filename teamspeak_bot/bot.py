@@ -95,15 +95,11 @@ def main() -> NoReturn:
         if (afk_config := plugins_config.get("afk_mover")) and afk_config.get("enabled"):
             bot.load_plugin(afk_mover.AFKMover(afk_config))
 
-        if (banned_names_cfg := plugins_config.get("banned_names")) and banned_names_cfg.get(
-            "enabled"
-        ):
-            bot.load_plugin(banned_names.BannedNamesPlugin(bot, banned_names_cfg))
+        if (names_config := plugins_config.get("banned_names")) and names_config.get("enabled"):
+            bot.load_plugin(banned_names.BannedNamesPlugin(bot, names_config))
 
-        if (error_events_cfg := plugins_config.get("error_events")) and error_events_cfg.get(
-            "enabled"
-        ):
-            bot.load_plugin(error_events.ErrorEventsPlugin(logger, error_events_cfg))
+        if (errors_config := plugins_config.get("error_events")) and errors_config.get("enabled"):
+            bot.load_plugin(error_events.ErrorEventsPlugin(logger, errors_config))
 
         if (fun_config := plugins_config.get("fun")) and fun_config.get("enabled"):
             bot.load_plugin(fun.FunPlugin())
