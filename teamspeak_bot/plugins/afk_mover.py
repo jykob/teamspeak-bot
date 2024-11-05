@@ -4,7 +4,7 @@ from contextlib import suppress
 from typing import TYPE_CHECKING
 
 from tsbot import plugin, query
-from tsbot.exceptions import TSException, TSResponseError
+from tsbot.exceptions import TSResponseError
 
 from teamspeak_bot.common import CLIENT_LIST_QUERY
 from teamspeak_bot.plugins import BasePluginConfig
@@ -86,9 +86,18 @@ class AFKMover(plugin.TSPlugin):
 
         channel_id = find.from_iterable(channel_list, self.afk_channel, "channel_name", "cid")
         if not channel_id:
-            raise TSException("No AFK Channel Found")
+            channel_id = await self.create_afk_channel(bot)
 
         self.afk_channel_id = channel_id
+
+    async def create_afk_channel(self, bot: TSBot) -> str:
+        resp = await bot.send(
+            query("channelcreate").params(
+                channel_name=self.afk_channel, channel_flag_permanent=True
+            )
+        )
+
+        return resp.first["cid"]
 
     @plugin.on("connect")
     async def start_afk_mover(self, bot: TSBot, ctx: None) -> None:
