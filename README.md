@@ -163,7 +163,7 @@ Plugin config key: `greeter`
 | enabled | `bool` | If the plugin is enabled |
 | message | `str` | Message to new user joining the server |
 
-### Fun
+### Jokes
 
 Plugin config key: `jokes`
 | Key | Type | Explanation |
