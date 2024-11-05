@@ -40,7 +40,7 @@ def from_iterable[K: str, V: str](
     op = operator.eq if strict else operator.contains
 
     for item in search_list:
-        if op(search_str, item[search_attr]):
+        if op(item[search_attr], search_str):
             return item[result_attr] if result_attr else item
 
     return None

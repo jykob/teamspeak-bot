@@ -20,7 +20,7 @@ def has_group(
     strict: bool = False,
 ) -> bool:
     op = operator.eq if strict else operator.contains
-    return any(op(g, cg["name"]) for g in groups for cg in client_groups)
+    return any(op(cg["name"], g) for g in groups for cg in client_groups)
 
 
 async def check_groups(
