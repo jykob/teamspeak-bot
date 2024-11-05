@@ -23,6 +23,8 @@ Checks periodically for clients that haven't been active for given amount of tim
 If such clients are found, move them to specified _AFK_ channel.
 
 If the bot doesn't find _AFK_ channel, it will try to create one.
+You can white/blacklist channels where clients can be moved from.
+If you have _Jail_ plugin enabled, You might want to add your jail channel to the blacklist.
 
 ### Banned names
 
@@ -136,6 +138,8 @@ Plugin config key: `afk_mover`
 | enabled | `bool` | If the plugin is enabled |
 | afk_channel | `str` | Name of the AFK channel. doesn't match strictly |
 | idle_time | `float` | AFK grace period in seconds |
+| channel_whitelist | `tuple[str, ...]` | Channel names where clients will be moved. |
+| channel_blacklist | `tuple[str, ...]` | Channel names where clients wont be moved. |
 
 ### Banned Names
 
