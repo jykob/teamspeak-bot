@@ -70,7 +70,7 @@ class JailPlugin(plugin.TSPlugin):
         )
 
     @plugin.once("connect")
-    async def startup(self, bot: TSBot, ctx: None) -> None:
+    async def init_jail(self, bot: TSBot, ctx: None) -> None:
         self.jail_channel_id = await self.get_jail_channel_id(bot)
         self.inmate_server_group_id = await self.get_inmate_server_group_id(bot)
         await self.free_inmates_on_startup(bot)
