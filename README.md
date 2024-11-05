@@ -22,6 +22,8 @@ You probably don't want anyone running these commands, so they are locked behind
 Checks periodically for clients that haven't been active for given amount of time.  
 If such clients are found, move them to specified _AFK_ channel.
 
+If the bot doesn't find _AFK_ channel, it will try to create one.
+
 ### Banned names
 
 Kicks out any clients with configured nickname.  
@@ -40,6 +42,14 @@ Comes with handful of fun commands:
 
 Greets new clients (_clients with `guest` server group_) with a configurable message.
 
+### Jail
+
+Jails a client for a given amount of time.
+Time can be provided as a _number of seconds_ or `<int>h<int>m<int>s` meaning number of hours, minutes, and seconds respectively with out the `<>` (_no need to provide all of them_)
+
+- `jail <nickname> <time>`: Jail misbehaving client.
+- `free <nickname>`: Free jailed client. Don't use in pity.
+
 ### Jokes
 
 Command to tell some good/bad jokes about programming:
@@ -49,7 +59,9 @@ Command to tell some good/bad jokes about programming:
 ### Notify
 
 Pokes client with a message after given amount of time.  
-Time can be provided as a _number of seconds_ or `<int>h<int>m<int>s` meaning number of hours, minutes, and seconds respectively with out the `<>` (_no need to provide all of them_)
+Time parsing works the same as in jail command.
+
+- `notify <time> <message>`: Pokes you after given time with the provided message.
 
 ## Requirements
 
@@ -162,6 +174,18 @@ Plugin config key: `greeter`
 |---|---|---|
 | enabled | `bool` | If the plugin is enabled |
 | message | `str` | Message to new user joining the server |
+
+### Jail
+
+Plugin config key: `jail`
+| Key | Type | Explanation |
+|---|---|---|
+| enabled | `bool` | If the plugin is enabled |
+| can_jail_uids | `tuple[str, ...]` | UIDs allowed to jail clients. |
+| can_jail_server_groups | `tuple[str, ...]` | Server groups allowed to jail clients. |
+| strict_server_group_checking | `bool` | Match server groups strictly |
+| jail_channel | `str` | Name of the jail channel. |
+| inmate_server_group_name | `str` | Name of the server group given to jailed clients. |
 
 ### Jokes
 
