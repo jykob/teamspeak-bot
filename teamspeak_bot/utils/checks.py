@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 import operator
-from typing import TYPE_CHECKING, Concatenate
+from typing import TYPE_CHECKING
 
 from tsbot.exceptions import TSPermissionError
 
 from teamspeak_bot.utils import get
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Coroutine, Sequence
+    from collections.abc import Sequence
 
     from tsbot import TSBot, TSCtx
 
@@ -37,13 +37,13 @@ def check_uids(uids: Sequence[str], ctx: TSCtx) -> bool:
     return ctx.get("invokeruid") in uids
 
 
-def check_uids_and_server_groups[**P](
+def check_uids_and_server_groups(  # noqa: ANN201
     uids: tuple[str, ...] | None,
     server_groups: tuple[str, ...] | None,
     *,
     strict: bool = False,
-) -> Callable[Concatenate[TSBot, TSCtx, P], Coroutine[None, None, None]]:
-    async def is_allowed_to_run(bot: TSBot, ctx: TSCtx, *args: P.args, **kwargs: P.kwargs) -> None:
+):
+    async def is_allowed_to_run(bot: TSBot, ctx: TSCtx, *a: str | None, **kw: str | None) -> None:
         if uids and check_uids(uids, ctx):
             return
 
