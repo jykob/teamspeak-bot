@@ -42,11 +42,8 @@ class JokesPlugin(plugin.TSPlugin):
 
     @plugin.command("joke", help_text="Tells a programming joke")
     async def tell_a_joke(self, bot: TSBot, ctx: TSCtx) -> None:
-        match await self.get_a_joke():
-            case Err(error):
-                raise TSCommandError(error)
-            case Ok(joke):
-                bot.register_task(functools.partial(self.tell_a_joke_task, ctx=ctx, joke=joke))
+        joke = (await self.get_a_joke()).unwrap_or_raise(TSCommandError)
+        bot.register_task(functools.partial(self.tell_a_joke_task, ctx=ctx, joke=joke))
 
     async def tell_a_joke_task(self, bot: TSBot, ctx: TSCtx, joke: Joke) -> None:
         await bot.respond(ctx, joke.setup)
