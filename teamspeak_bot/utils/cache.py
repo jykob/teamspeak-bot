@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import time
+from collections import defaultdict
 from typing import TYPE_CHECKING, Any, NamedTuple
 
 if TYPE_CHECKING:
@@ -47,13 +48,13 @@ class _Cache:
 
 
 _cache = _Cache(max_ttl=60 * 10)
-_cache_lock = asyncio.Lock()
+_cache_locks: defaultdict[Any, asyncio.Lock] = defaultdict(asyncio.Lock)
 
 
 async def with_cache[T, *Ts](
     func: Callable[[*Ts], Coroutine[None, None, T]], *args: *Ts, max_ttl: int
 ) -> T:
-    async with _cache_lock:
+    async with _cache_locks[args]:
         _cache.purge()
 
         if hit := _cache.get(args, max_ttl):
