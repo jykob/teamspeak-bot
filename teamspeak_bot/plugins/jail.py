@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-import functools
 from typing import TYPE_CHECKING
 
 from tsbot import TSBot, TSCtx, TSTask, plugin, query
@@ -148,11 +147,7 @@ class JailPlugin(plugin.TSPlugin):
             raise TSCommandError("Client already jailed")
 
         self.jail_tasks[client["client_database_id"]] = bot.register_task(
-            functools.partial(
-                self.jail_client_task,
-                client=client,
-                jail_time=jail_time,
-            )
+            self.jail_client_task, client, jail_time
         )
 
     async def free(self, bot: TSBot, ctx: TSCtx, nickname: str) -> None:
