@@ -161,4 +161,5 @@ class AFKMover(plugin.TSPlugin):
     @plugin.on("disconnect")
     async def stop_afk_mover(self, bot: TSBot, ctx: None) -> None:
         if self.task is not None:
-            self.task = bot.remove_task(self.task)
+            bot.remove_task(self.task)
+            self.task = None

@@ -5,11 +5,11 @@ import asyncio
 import logging
 import signal
 from contextlib import suppress
-from typing import NoReturn
+from typing import NoReturn, cast
 
 from tsbot import TSBot, TSCtx
 
-from teamspeak_bot.config import get_config
+from teamspeak_bot.config import OptionalFields, get_config
 from teamspeak_bot.logging import setup_logger
 from teamspeak_bot.plugins import (
     admin,
@@ -58,23 +58,26 @@ def main() -> NoReturn:
 
     setup_logger(args.verbose, args.logfile, *formats)
 
-    extra_kwargs = {
-        k: v
-        for k in (
-            "port",
-            "protocol",
-            "server_id",
-            "nickname",
-            "invoker",
-            "connection_retries",
-            "connection_retry_timeout",
-            "ratelimited",
-            "ratelimit_calls",
-            "ratelimit_period",
-            "query_timeout",
-        )
-        if (v := config.get(k)) is not None
-    }
+    extra_kwargs = cast(
+        OptionalFields,
+        {
+            k: v
+            for k in (
+                "port",
+                "protocol",
+                "server_id",
+                "nickname",
+                "invoker",
+                "connection_retries",
+                "connection_retry_timeout",
+                "ratelimited",
+                "ratelimit_calls",
+                "ratelimit_period",
+                "query_timeout",
+            )
+            if (v := config.get(k)) is not None
+        },
+    )
 
     bot = TSBot(
         username=config["username"],

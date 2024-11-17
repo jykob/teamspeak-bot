@@ -3,7 +3,7 @@ from __future__ import annotations
 import importlib
 import importlib.util
 import sys
-from typing import Final, Literal, NotRequired, Required, TypedDict, cast
+from typing import Final, Literal, TypedDict, cast
 
 from result import Err, Ok, Result
 
@@ -38,26 +38,30 @@ class PluginsConfig(TypedDict, total=False):
     notify: notify.NotifyConfig
 
 
-class BotConfig(TypedDict):
-    username: Required[str]
-    password: Required[str]
-    address: Required[str]
-    port: NotRequired[int]
+class RequiredFields(TypedDict):
+    username: str
+    password: str
+    address: str
 
-    protocol: NotRequired[Literal["ssh", "raw"]]
-    server_id: NotRequired[int]
-    nickname: NotRequired[str | None]
-    invoker: NotRequired[str]
-    connection_retries: NotRequired[int]
-    connection_retry_timeout: NotRequired[float]
-    ratelimited: NotRequired[bool]
-    ratelimit_calls: NotRequired[int]
-    ratelimit_period: NotRequired[float]
-    query_timeout: NotRequired[float]
 
-    plugins: NotRequired[PluginsConfig]
+class OptionalFields(TypedDict, total=False):
+    port: int
 
-    logging: NotRequired[LoggingConfig]
+    protocol: Literal["ssh", "raw"]
+    server_id: int
+    nickname: str | None
+    invoker: str
+    connection_retries: int
+    connection_retry_timeout: float
+    ratelimited: bool
+    ratelimit_calls: int
+    ratelimit_period: float
+    query_timeout: float
+
+
+class BotConfig(RequiredFields, OptionalFields, total=False):
+    plugins: PluginsConfig
+    logging: LoggingConfig
 
 
 DEFAULT_PLUGINS_CONFIG: Final[PluginsConfig] = {
