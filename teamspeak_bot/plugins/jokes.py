@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-import functools
 from typing import TYPE_CHECKING, NamedTuple
 
 import httpx
@@ -43,7 +42,7 @@ class JokesPlugin(plugin.TSPlugin):
     @plugin.command("joke", help_text="Tells a programming joke")
     async def tell_a_joke(self, bot: TSBot, ctx: TSCtx) -> None:
         joke = (await self.get_a_joke()).unwrap_or_raise(TSCommandError)
-        bot.register_task(functools.partial(self.tell_a_joke_task, ctx=ctx, joke=joke))
+        bot.register_task(self.tell_a_joke_task, ctx, joke)
 
     async def tell_a_joke_task(self, bot: TSBot, ctx: TSCtx, joke: Joke) -> None:
         await bot.respond(ctx, joke.setup)
