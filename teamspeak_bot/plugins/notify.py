@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-import functools
 from contextlib import suppress
 from typing import TYPE_CHECKING
 
@@ -44,14 +43,7 @@ class NotifyPlugin(plugin.TSPlugin):
         if self.max_delay and delay > self.max_delay:
             raise TSCommandError(f"Time must be under {formatters.seconds_to_time(self.max_delay)}")
 
-        bot.register_task(
-            functools.partial(
-                self.notify_task,
-                client_id=ctx["invokerid"],
-                message=" ".join(message),
-                delay=delay,
-            )
-        )
+        bot.register_task(self.notify_task, ctx["invokerid"], " ".join(message), delay)
 
     async def notify_task(self, bot: TSBot, client_id: str, message: str, delay: int) -> None:
         await asyncio.sleep(delay)
