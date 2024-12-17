@@ -60,7 +60,7 @@ class BannedNamesPlugin(plugin.TSPlugin):
 
     async def cancel_check_task(self, bot: TSBot, ctx: None) -> None:
         if self.check_task:
-            bot.remove_task(self.check_task)
+            self.check_task.cancel()
             self.check_task = None
 
     def check_client_nickname(self, nickname: str) -> bool:
