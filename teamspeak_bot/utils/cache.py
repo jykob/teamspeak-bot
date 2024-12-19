@@ -52,7 +52,7 @@ _cache_locks: defaultdict[Any, asyncio.Lock] = defaultdict(asyncio.Lock)
 
 
 async def with_cache[T, *Ts](
-    func: Callable[[*Ts], Coroutine[None, None, T]], *args: *Ts, max_ttl: int
+    func: Callable[[*Ts], Coroutine[None, None, T]], *args: *Ts, max_ttl: int = 0
 ) -> T:
     async with _cache_locks[args]:
         _cache.purge()
