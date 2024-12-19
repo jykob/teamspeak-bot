@@ -26,6 +26,14 @@ If the bot doesn't find _AFK_ channel, it will try to create one.
 You can white/blacklist channels where clients can be moved from.
 If you have _Jail_ plugin enabled, You might want to add your jail channel to the blacklist.
 
+### 📣 Announce
+
+Announce a message to clients by poking them.  
+You can announce to a specific group or to all clients.
+
+- `announce "Hello all"`: Pokes all clients with a message "Hello all"
+- `announce "Team meeting now!" Staff`: Pokes clients in "Staff" server group with "Team meeting now!"
+
 ### ⛔ Banned names
 
 Kicks out any clients with configured nickname.  
@@ -140,6 +148,16 @@ Plugin config key: `afk_mover`
 | idle_time | `float` | AFK grace period in seconds |
 | channel_whitelist | `tuple[str, ...]` | Channel names where clients will be moved. |
 | channel_blacklist | `tuple[str, ...]` | Channel names where clients wont be moved. |
+
+### Announce
+
+Plugin config key: `announce`
+| Key | Type | Explanation |
+|---|---|---|
+| enabled | `bool` | If the plugin is enabled |
+| allowed_uids | `tuple[str, ...]` | UIDs allowed to run announce commands. |
+| allowed_server_groups | `tuple[str, ...]` | Server groups allowed to run announce commands. |
+| strict_server_group_checking | `bool` | Match server groups strictly |
 
 ### Banned Names
 
