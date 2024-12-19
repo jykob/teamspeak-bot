@@ -14,6 +14,7 @@ from teamspeak_bot.logging import setup_logger
 from teamspeak_bot.plugins import (
     admin,
     afk_mover,
+    announce,
     banned_names,
     error_events,
     fun,
@@ -98,6 +99,9 @@ def main() -> NoReturn:
 
         if (afk_config := plugins_config.get("afk_mover")) and afk_config.get("enabled"):
             bot.load_plugin(afk_mover.AFKMover(afk_config))
+
+        if (announce_config := plugins_config.get("announce")) and announce_config.get("enabled"):
+            bot.load_plugin(announce.AnnouncementPlugin(bot, announce_config))
 
         if (names_config := plugins_config.get("banned_names")) and names_config.get("enabled"):
             bot.load_plugin(banned_names.BannedNamesPlugin(bot, names_config))

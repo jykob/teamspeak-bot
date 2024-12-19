@@ -10,6 +10,7 @@ from result import Err, Ok, Result
 from teamspeak_bot.plugins import (
     admin,
     afk_mover,
+    announce,
     banned_names,
     error_events,
     fun,
@@ -29,6 +30,7 @@ class LoggingConfig(TypedDict, total=False):
 class PluginsConfig(TypedDict, total=False):
     admin: admin.AdminConfig
     afk_mover: afk_mover.AFKMoverConfig
+    announce: announce.AnnouncementConfig
     banned_names: banned_names.BannedNamesConfig
     error_events: error_events.ErrorEventsConfig
     fun: fun.FunConfig
@@ -67,6 +69,7 @@ class BotConfig(RequiredFields, OptionalFields, total=False):
 DEFAULT_PLUGINS_CONFIG: Final[PluginsConfig] = {
     "admin": admin.DEFAULT_CONFIG,
     "afk_mover": afk_mover.DEFAULT_CONFIG,
+    "announce": announce.DEFAULT_CONFIG,
     "banned_names": banned_names.DEFAULT_CONFIG,
     "error_events": error_events.DEFAULT_CONFIG,
     "fun": fun.DEFAULT_CONFIG,
