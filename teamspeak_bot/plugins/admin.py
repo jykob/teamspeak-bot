@@ -58,7 +58,7 @@ class AdminPlugin(plugin.TSPlugin):
 
     async def send(self, bot: TSBot, ctx: TSCtx, raw_command: str) -> None:
         response = await try_.async_or_call(
-            bot.send_raw(raw_command), lambda e: f"{type(e).__name__}: {e}"
+            bot.send_raw(raw_command), on_error=lambda e: f"{type(e).__name__}: {e}"
         )
 
         await bot.respond(ctx, repr(response) if isinstance(response, TSResponse) else response)

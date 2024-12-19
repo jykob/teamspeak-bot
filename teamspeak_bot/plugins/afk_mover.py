@@ -113,7 +113,12 @@ class AFKMover(plugin.TSPlugin):
     async def get_afk_channel(self, bot: TSBot) -> str:
         channel_list = await cache.with_cache(bot.send, CHANNEL_LIST_QUERY, max_ttl=60)
 
-        channel_id = find.from_iterable(channel_list, self.afk_channel, "channel_name", "cid")
+        channel_id = find.from_iterable(
+            channel_list,
+            search=self.afk_channel,
+            key="channel_name",
+            result="cid",
+        )
         if not channel_id:
             channel_id = await self.create_afk_channel(bot)
 
