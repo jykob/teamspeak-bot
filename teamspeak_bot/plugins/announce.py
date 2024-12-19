@@ -25,7 +25,7 @@ class AnnouncementConfig(BasePluginConfig):
 DEFAULT_CONFIG = AnnouncementConfig(
     enabled=True,
     allowed_uids=(),
-    allowed_server_groups=("Server Admin",),
+    allowed_server_groups=("Admin",),
     strict_server_group_checking=False,
 )
 
