@@ -166,7 +166,7 @@ Plugin config key: `banned_names`
 | Key | Type | Explanation |
 |---|---|---|
 | enabled | `bool` | If the plugin is enabled |
-| banned_names | `tuple[str, ...]` | Blacklisted names |
+| banned_names | `tuple[str, ...]` | Blacklisted names (case insensitive) |
 | is_banned_name | `Callable[[str], bool]` | Function that determines if a name is banned |
 | message | `str` | Kick message |
 | check_period | `float` | How often bot checks for banned names in the client list in seconds |

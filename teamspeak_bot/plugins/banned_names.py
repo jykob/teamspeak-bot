@@ -31,7 +31,7 @@ class BannedNamesConfig(BasePluginConfig, total=False):
 
 DEFAULT_CONFIG = BannedNamesConfig(
     enabled=True,
-    banned_names=("TeamSpeakUser",),
+    banned_names=("teamspeakuser",),
 )
 
 
@@ -40,9 +40,14 @@ class BannedNamesPlugin(plugin.TSPlugin):
 
     def __init__(self, bot: TSBot, config: BannedNamesConfig) -> None:
         self.message = config.get("message", DEFAULT_MESSAGE)
-        self.banned_names = config.get("banned_names")
-        self.is_banned_name = config.get("is_banned_name")
         self.check_period = config.get("check_period", DEFAULT_CHECK_PERIOD)
+
+        self.is_banned_name = config.get("is_banned_name")
+        self.banned_names = (
+            tuple(name.casefold() for name in banned_names)
+            if (banned_names := config.get("banned_names"))
+            else None
+        )
 
         self.check_task: TSTask | None = None
 
