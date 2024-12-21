@@ -77,7 +77,12 @@ class JailPlugin(plugin.TSPlugin):
     async def get_jail_channel_id(self, bot: TSBot) -> str:
         channel_list = await cache.with_cache(bot.send, CHANNEL_LIST_QUERY, max_ttl=60)
 
-        channel_id = find.from_iterable(channel_list, self.jail_channel, "channel_name", "cid")
+        channel_id = find.from_iterable(
+            channel_list,
+            search=self.jail_channel,
+            key="channel_name",
+            result="cid",
+        )
         if not channel_id:
             channel_id = await self.create_jail_channel(bot)
 
@@ -95,7 +100,12 @@ class JailPlugin(plugin.TSPlugin):
     async def get_inmate_server_group_id(self, bot: TSBot) -> str:
         server_groups_list = await cache.with_cache(bot.send, SERVER_GROUPS_QUERY, max_ttl=60)
 
-        inmate_id = find.from_iterable(server_groups_list, self.inmate_name, "name", "sgid")
+        inmate_id = find.from_iterable(
+            server_groups_list,
+            search=self.inmate_name,
+            key="name",
+            result="sgid",
+        )
         if inmate_id is None:
             inmate_id = await self.create_inmate_server_group(bot)
 
@@ -139,7 +149,7 @@ class JailPlugin(plugin.TSPlugin):
 
         client_list = await bot.send(query("clientlist").option("groups"))
 
-        client = find.from_iterable(client_list, nickname, "client_nickname")
+        client = find.from_iterable(client_list, search=nickname, key="client_nickname")
         if client is None:
             raise TSCommandError("No client found")
 
@@ -153,7 +163,7 @@ class JailPlugin(plugin.TSPlugin):
     async def free(self, bot: TSBot, ctx: TSCtx, nickname: str) -> None:
         client_list = await bot.send(query("clientlist").option("groups"))
 
-        client = find.from_iterable(client_list, nickname, "client_nickname")
+        client = find.from_iterable(client_list, search=nickname, key="client_nickname")
         if client is None:
             raise TSCommandError("No client found")
 

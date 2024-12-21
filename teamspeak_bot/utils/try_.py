@@ -29,8 +29,15 @@ def or_call[T, TD, *Ts](
         return on_error(e)
 
 
+async def async_or_none[T](func: Coroutine[None, None, T]) -> T | None:
+    try:
+        return await func
+    except Exception:
+        return None
+
+
 async def async_or_call[T, TD](
-    func: Coroutine[None, None, T], on_error: Callable[[Exception], TD]
+    func: Coroutine[None, None, T], *, on_error: Callable[[Exception], TD]
 ) -> T | TD:
     try:
         return await func

@@ -8,7 +8,7 @@ from tsbot.exceptions import TSException, TSResponseError
 
 from teamspeak_bot.common import SERVER_GROUPS_QUERY
 from teamspeak_bot.plugins import BasePluginConfig
-from teamspeak_bot.utils import cache
+from teamspeak_bot.utils import cache, find
 
 if TYPE_CHECKING:
     from tsbot import TSBot, TSCtx
@@ -38,10 +38,13 @@ class GreeterPlugin(plugin.TSPlugin):
     async def get_guest_id(self, bot: TSBot, ctx: None) -> None:
         server_groups = await cache.with_cache(bot.send, SERVER_GROUPS_QUERY, max_ttl=60)
 
-        guest_id = None
-        for group in server_groups:
-            if group["name"] == "Guest" and group["type"] == "1":
-                guest_id = group["sgid"]
+        guest_id = find.from_iterable(
+            server_groups,
+            search="Guest",
+            key="name",
+            result="sgid",
+            predicate=lambda g: g["type"] == "1",
+        )
 
         if not guest_id:
             raise TSException("Failed to find 'Guest' server id")
