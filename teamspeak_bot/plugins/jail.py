@@ -90,7 +90,7 @@ class JailPlugin(plugin.TSPlugin):
             )
         )
 
-        return resp.first["cid"]
+        return resp["cid"]
 
     async def get_inmate_server_group_id(self, bot: TSBot) -> str:
         server_groups_list = await cache.with_cache(bot.send, SERVER_GROUPS_QUERY, max_ttl=60)
@@ -103,7 +103,7 @@ class JailPlugin(plugin.TSPlugin):
 
     async def create_inmate_server_group(self, bot: TSBot) -> str:
         resp = await bot.send(query("servergroupadd").params(name=self.inmate_name))
-        inmate_id = resp.first["cid"]
+        inmate_id = resp["cid"]
 
         await bot.send(
             query("servergroupaddperm")

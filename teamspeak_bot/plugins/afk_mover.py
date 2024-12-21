@@ -126,7 +126,7 @@ class AFKMover(plugin.TSPlugin):
             )
         )
 
-        return resp.first["cid"]
+        return resp["cid"]
 
     async def get_whitelist_ids(self, bot: TSBot) -> tuple[str, ...] | None:
         if self.whitelisted_channels is None:
