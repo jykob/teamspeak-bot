@@ -16,7 +16,11 @@ if TYPE_CHECKING:
     from tsbot import TSBot, TSCtx
 
 
-class AnnouncementConfig(BasePluginConfig):
+DEFAULT_ALLOWED_UIDS: tuple[str, ...] = ()
+DEFAULT_ALLOWED_SERVER_GROUPS: tuple[str, ...] = ("Admin",)
+
+
+class AnnouncementConfig(BasePluginConfig, total=False):
     allowed_uids: tuple[str, ...]
     allowed_server_groups: tuple[str, ...]
     strict_server_group_checking: bool
@@ -24,9 +28,6 @@ class AnnouncementConfig(BasePluginConfig):
 
 DEFAULT_CONFIG = AnnouncementConfig(
     enabled=True,
-    allowed_uids=(),
-    allowed_server_groups=("Admin",),
-    strict_server_group_checking=False,
 )
 
 
@@ -34,8 +35,8 @@ class AnnouncementPlugin(plugin.TSPlugin):
     def __init__(self, bot: TSBot, config: AnnouncementConfig) -> None:
         announce_check = (
             checks.check_uids_and_server_groups(
-                uids=config.get("allowed_uids"),
-                server_groups=config.get("allowed_server_groups"),
+                uids=config.get("allowed_uids", DEFAULT_ALLOWED_UIDS),
+                server_groups=config.get("allowed_server_groups", DEFAULT_ALLOWED_SERVER_GROUPS),
                 strict=config.get("strict_server_group_checking", False),
             ),
         )
