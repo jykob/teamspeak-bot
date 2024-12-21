@@ -1,18 +1,15 @@
 from __future__ import annotations
 
-import asyncio
-from contextlib import suppress
 from typing import TYPE_CHECKING
 
 from tsbot import plugin, query
-from tsbot.exceptions import TSResponseError
 
 from teamspeak_bot.common import CLIENT_LIST_QUERY
 from teamspeak_bot.plugins import BasePluginConfig
 from teamspeak_bot.utils import cache
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterable
 
     from tsbot import TSBot, TSCtx, TSTask
 
@@ -39,7 +36,7 @@ class BannedNamesPlugin(plugin.TSPlugin):
     KICK_QUERY = query("clientkick").params(reasonid=REASON_KICK_SERVER)
 
     def __init__(self, bot: TSBot, config: BannedNamesConfig) -> None:
-        self.message = config.get("message", DEFAULT_MESSAGE)
+        self.kick_query = self.KICK_QUERY.params(msg=config.get("message", DEFAULT_MESSAGE))
         self.check_period = config.get("check_period", DEFAULT_CHECK_PERIOD)
 
         self.is_banned_name = config.get("is_banned_name")
@@ -78,22 +75,21 @@ class BannedNamesPlugin(plugin.TSPlugin):
 
     async def check_for_banned_names_on_enter(self, bot: TSBot, ctx: TSCtx) -> None:
         if self.check_client_nickname(ctx["client_nickname"]):
-            await self.kick_client(bot, ctx["clid"])
+            await self.kick_clients(bot, (int(ctx["clid"]),))
 
     async def check_for_banned_names_periodically(self, bot: TSBot) -> None:
         client_list = await cache.with_cache(bot.send, CLIENT_LIST_QUERY, max_ttl=0)
 
-        kick_coros = tuple(
-            self.kick_client(bot, client["clid"])
+        client_ids_to_be_kicked = tuple(
+            int(client["clid"])
             for client in client_list
             if self.check_client_nickname(client["client_nickname"])
         )
 
-        if not kick_coros:
+        if not client_ids_to_be_kicked:
             return
 
-        await asyncio.gather(*kick_coros)
+        await self.kick_clients(bot, client_ids_to_be_kicked)
 
-    async def kick_client(self, bot: TSBot, clid: str) -> None:
-        with suppress(TSResponseError):
-            await bot.send(self.KICK_QUERY.params(clid=clid, reasonmsg=self.message))
+    async def kick_clients(self, bot: TSBot, client_ids: Iterable[int]) -> None:
+        await bot.send_batched(self.kick_query.params(clid=client) for client in client_ids)
