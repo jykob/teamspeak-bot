@@ -66,7 +66,7 @@ class BannedNamesPlugin(plugin.TSPlugin):
     def check_client_nickname(self, nickname: str) -> bool:
         return bool(
             self.banned_names is not None
-            and nickname in self.banned_names
+            and nickname.casefold() in self.banned_names
             or self.is_banned_name is not None
             and self.is_banned_name(nickname)
         )
