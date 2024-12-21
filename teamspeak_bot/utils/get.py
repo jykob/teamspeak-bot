@@ -14,6 +14,6 @@ SERVER_GROUPS_BY_ID_QUERY = query("servergroupsbyclientid")
 
 async def client_server_groups(bot: TSBot, ctx: TSCtx) -> tuple[dict[str, str], ...]:
     ids = await bot.send(GET_DATABASE_ID_QUERY.params(cluid=ctx["invokeruid"]))
-    groups = await bot.send(SERVER_GROUPS_BY_ID_QUERY.params(cldbid=ids.first["cldbid"]))
+    groups = await bot.send(SERVER_GROUPS_BY_ID_QUERY.params(cldbid=ids["cldbid"]))
 
     return groups.data

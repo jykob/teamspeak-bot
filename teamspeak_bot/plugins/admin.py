@@ -70,7 +70,7 @@ class AdminPlugin(plugin.TSPlugin):
     async def change_nickname(self, bot: TSBot, ctx: TSCtx, nickname: str | None = None) -> None:
         if not nickname:
             resp = await bot.send_raw("whoami")
-            nickname = resp.first["client_login_name"]
+            nickname = resp["client_login_name"]
 
         await bot.send(query("clientupdate").params(client_nickname=nickname))
         await bot.respond(ctx, f"Nickname changed to {nickname!r}")
