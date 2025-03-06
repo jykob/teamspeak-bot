@@ -43,7 +43,7 @@ def from_iterable[K: str, V: str](
     op = operator.eq if strict else operator.contains
 
     for item in haystack:
-        if op(item[key], search) and predicate(item) if predicate else True:
+        if op(item[key], search) and (predicate(item) if predicate else True):
             return item[result] if result else item
 
     return None
