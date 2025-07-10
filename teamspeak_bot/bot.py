@@ -95,16 +95,16 @@ def main() -> NoReturn:
 
     if plugins_config := config.get("plugins"):
         if (admin_config := plugins_config.get("admin")) and admin_config.get("enabled"):
-            bot.load_plugin(admin.AdminPlugin(bot, admin_config))
+            bot.load_plugin(admin.AdminPlugin(admin_config))
 
         if (afk_config := plugins_config.get("afk_mover")) and afk_config.get("enabled"):
             bot.load_plugin(afk_mover.AFKMover(afk_config))
 
         if (announce_config := plugins_config.get("announce")) and announce_config.get("enabled"):
-            bot.load_plugin(announce.AnnouncementPlugin(bot, announce_config))
+            bot.load_plugin(announce.AnnouncementPlugin(announce_config))
 
         if (names_config := plugins_config.get("banned_names")) and names_config.get("enabled"):
-            bot.load_plugin(banned_names.BannedNamesPlugin(bot, names_config))
+            bot.load_plugin(banned_names.BannedNamesPlugin(names_config))
 
         if (errors_config := plugins_config.get("error_events")) and errors_config.get("enabled"):
             bot.load_plugin(error_events.ErrorEventsPlugin(logger, errors_config))
@@ -113,7 +113,7 @@ def main() -> NoReturn:
             bot.load_plugin(fun.FunPlugin())
 
         if (jail_config := plugins_config.get("jail")) and jail_config.get("enabled"):
-            bot.load_plugin(jail.JailPlugin(bot, jail_config))
+            bot.load_plugin(jail.JailPlugin(jail_config))
 
         if (greeter_config := plugins_config.get("greeter")) and greeter_config.get("enabled"):
             bot.load_plugin(greeter.GreeterPlugin(greeter_config))
