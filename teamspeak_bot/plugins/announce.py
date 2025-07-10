@@ -32,8 +32,8 @@ DEFAULT_CONFIG = AnnouncementConfig(
 
 
 class AnnouncementPlugin(plugin.TSPlugin):
-    def __init__(self, bot: TSBot, config: AnnouncementConfig) -> None:
-        announce_check = (
+    def __init__(self, config: AnnouncementConfig) -> None:
+        self.announce_check = (
             checks.check_uids_and_server_groups(
                 uids=config.get("allowed_uids", DEFAULT_ALLOWED_UIDS),
                 server_groups=config.get("allowed_server_groups", DEFAULT_ALLOWED_SERVER_GROUPS),
@@ -41,7 +41,8 @@ class AnnouncementPlugin(plugin.TSPlugin):
             ),
         )
 
-        bot.register_command("announce", self.announce, checks=announce_check)
+    def on_load(self, bot: TSBot) -> None:
+        bot.register_command("announce", self.announce, checks=self.announce_check)
 
     async def _get_server_group_clients(
         self, bot: TSBot, group: str, clients: Iterable[Mapping[str, str]]

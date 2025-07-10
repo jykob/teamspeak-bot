@@ -44,7 +44,7 @@ class JailPlugin(plugin.TSPlugin):
     JAIL_QUERY = query("servergroupaddclient")
     MOVE_QUERY = query("clientmove")
 
-    def __init__(self, bot: TSBot, config: JailConfig) -> None:
+    def __init__(self, config: JailConfig) -> None:
         self.jail_channel = config.get("jail_channel", DEFAULT_JAIL_CHANNEL)
         self.inmate_name = config.get("inmate_server_group_name", DEFAULT_INMATE_NAME)
 
@@ -53,7 +53,7 @@ class JailPlugin(plugin.TSPlugin):
 
         self.jail_tasks: dict[str, TSTask] = {}
 
-        can_jail_check = [
+        self.can_jail_check = [
             checks.check_uids_and_server_groups(
                 uids=config.get("can_jail_uids"),
                 server_groups=config.get("can_jail_server_groups"),
@@ -61,11 +61,12 @@ class JailPlugin(plugin.TSPlugin):
             )
         ]
 
+    def on_load(self, bot: TSBot) -> None:
         bot.register_command(
-            "jail", self.jail, help_text="Jail a client for misbehaving", checks=can_jail_check
+            "jail", self.jail, help_text="Jail a client for misbehaving", checks=self.can_jail_check
         )
         bot.register_command(
-            "free", self.free, help_text="Free a client from jail", checks=can_jail_check
+            "free", self.free, help_text="Free a client from jail", checks=self.can_jail_check
         )
 
     @plugin.once("connect")

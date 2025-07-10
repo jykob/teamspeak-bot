@@ -24,8 +24,8 @@ DEFAULT_CONFIG = AdminConfig(
 
 
 class AdminPlugin(plugin.TSPlugin):
-    def __init__(self, bot: TSBot, config: AdminConfig) -> None:
-        admin_check = [
+    def __init__(self, config: AdminConfig) -> None:
+        self.admin_check = [
             checks.check_uids_and_server_groups(
                 uids=config.get("allowed_uids"),
                 server_groups=config.get("allowed_server_groups"),
@@ -33,12 +33,13 @@ class AdminPlugin(plugin.TSPlugin):
             )
         ]
 
-        bot.register_command("eval", self.eval_, hidden=True, raw=True, checks=admin_check)
-        bot.register_command("exec", self.exec_, hidden=True, raw=True, checks=admin_check)
-        bot.register_command("quit", self.quit_, hidden=True, checks=admin_check)
-        bot.register_command("send", self.send, hidden=True, raw=True, checks=admin_check)
-        bot.register_command("spam", self.spam, hidden=True, checks=admin_check)
-        bot.register_command("nickname", self.change_nickname, hidden=True, checks=admin_check)
+    def on_load(self, bot: TSBot) -> None:
+        bot.register_command("eval", self.eval_, hidden=True, raw=True, checks=self.admin_check)
+        bot.register_command("exec", self.exec_, hidden=True, raw=True, checks=self.admin_check)
+        bot.register_command("quit", self.quit_, hidden=True, checks=self.admin_check)
+        bot.register_command("send", self.send, hidden=True, raw=True, checks=self.admin_check)
+        bot.register_command("spam", self.spam, hidden=True, checks=self.admin_check)
+        bot.register_command("nickname", self.change_nickname, hidden=True, checks=self.admin_check)
 
     async def eval_(self, bot: TSBot, ctx: TSCtx, eval_str: str) -> None:
         response = try_.or_call(

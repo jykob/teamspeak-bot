@@ -35,7 +35,7 @@ DEFAULT_CONFIG = BannedNamesConfig(
 class BannedNamesPlugin(plugin.TSPlugin):
     KICK_QUERY = query("clientkick").params(reasonid=REASON_KICK_SERVER)
 
-    def __init__(self, bot: TSBot, config: BannedNamesConfig) -> None:
+    def __init__(self, config: BannedNamesConfig) -> None:
         self.kick_query = self.KICK_QUERY.params(msg=config.get("message", DEFAULT_MESSAGE))
         self.check_period = config.get("check_period", DEFAULT_CHECK_PERIOD)
 
@@ -51,6 +51,7 @@ class BannedNamesPlugin(plugin.TSPlugin):
         if self.banned_names is None and self.is_banned_name is None:
             raise RuntimeError("Either 'banned_names' or 'is_banned_name' has to be declared")
 
+    def on_load(self, bot: TSBot) -> None:
         bot.register_event_handler("cliententerview", self.check_for_banned_names_on_enter)
         bot.register_event_handler("connect", self.start_check_task)
         bot.register_event_handler("disconnect", self.cancel_check_task)
