@@ -60,7 +60,7 @@ def main() -> NoReturn:
     setup_logger(args.verbose, args.logfile, *formats)
 
     extra_kwargs = cast(
-        OptionalFields,
+        "OptionalFields",
         {
             k: v
             for k in (

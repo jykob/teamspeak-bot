@@ -97,7 +97,7 @@ def get_config(config_path: str) -> Result[BotConfig, str]:
     sys.modules["config"] = module
     spec.loader.exec_module(module)
 
-    imported_config = cast(BotConfig | None, getattr(module, "CONFIG", None))
+    imported_config = cast("BotConfig | None", getattr(module, "CONFIG", None))
     if imported_config is None:
         return Err("Config module doesn't have CONFIG attribute")
 
